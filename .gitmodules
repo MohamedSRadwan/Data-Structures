@@ -1,0 +1,18 @@
+[submodule "Lab-4"]
+	path = Lab-4
+	url = https://github.com/MohamedSRadwan/DS-Lab-4
+[submodule "Lab-5"]
+	path = Lab-5
+	url = https://github.com/MohamedSRadwan/DS-Lab-5
+[submodule "Lab-6"]
+	path = Lab-6
+	url = https://github.com/MohamedSRadwan/DS-Lab-6
+[submodule "SparseMatrix"]
+	path = SparseMatrix
+	url = https://github.com/MohamedSRadwan/SparseMatrix
+[submodule "Lab-3"]
+	path = Lab-3
+	url = https://github.com/MohamedSRadwan/DS-Lab-3
+[submodule "Lab-2"]
+	path = Lab-2
+	url = https://github.com/MohamedSRadwan/DS-Lab-2
