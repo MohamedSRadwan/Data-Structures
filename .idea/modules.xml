@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/DS Lab 4/DS Lab 4.iml" filepath="$PROJECT_DIR$/DS Lab 4/DS Lab 4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DS lab 2/DS lab 2.iml" filepath="$PROJECT_DIR$/DS lab 2/DS lab 2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DS lab 3/DS lab 3.iml" filepath="$PROJECT_DIR$/DS lab 3/DS lab 3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DS lab 5/DS lab 5.iml" filepath="$PROJECT_DIR$/DS lab 5/DS lab 5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DS lab 6/DS lab 6.iml" filepath="$PROJECT_DIR$/DS lab 6/DS lab 6.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Data Structures.iml" filepath="$PROJECT_DIR$/Data Structures.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HashMap/HashMap.iml" filepath="$PROJECT_DIR$/HashMap/HashMap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SparseMatrix/SparseMatrix.iml" filepath="$PROJECT_DIR$/SparseMatrix/SparseMatrix.iml" />
+      <module fileurl="file://$PROJECT_DIR$/red-black BST/red-black BST.iml" filepath="$PROJECT_DIR$/red-black BST/red-black BST.iml" />
+      <module fileurl="file://$PROJECT_DIR$/testDS/testDS.iml" filepath="$PROJECT_DIR$/testDS/testDS.iml" />
+    </modules>
+  </component>
+</project>
