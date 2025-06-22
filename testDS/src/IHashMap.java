@@ -1,4 +1,4 @@
-public interface IHashMap {
+public interface IHashMap<Key extends Comparable<Key>, Value> {
 
     /**
      * Computes the hash code for the given key by determining its position
@@ -7,13 +7,13 @@ public interface IHashMap {
      * @param key the object whose hash code is to be computed
      * @return the hash value corresponding to the given key
      */
-    int hash(int key);
+    int hash(Key key);
     /**
      * Add a key-value pair to the map.
      * @param key the key to be added
      * @param value the value to be added
      */
-    void put(int key, Object value);
+    void put(Key key, Value value);
 
     /**
      * Retrieves the value associated with the specified key.
@@ -22,14 +22,14 @@ public interface IHashMap {
      * @return the value associated with the specified key, or null if the key does not exist in the map
      */
 
-    Object get(int key);
+    Value get(Key key);
 
     /**
      * Removes the entry for the specified key from the map if it exists.
      *
      * @param key the key whose entry is to be removed from the map
      */
-    void remove(int key);
+    void remove(Key key);
 
     /**
      * Checks if the map contains a mapping for the specified key.
@@ -37,7 +37,7 @@ public interface IHashMap {
      * @param key the key whose presence in the map is to be tested
      * @return true if this map contains a mapping for the specified key, false otherwise
      */
-    boolean containsKey(int key);
+    boolean containsKey(Key key);
 
     /**
      * Returns the number of key-value mappings in the map.

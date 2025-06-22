@@ -1,12 +1,12 @@
 import com.MohamedSRadwan.github.datastructures.redblackbst.RedBlackBST;
 
-public class MyHashMap implements IHashMap {
+public class MyHashMap<Key extends Comparable<Key>, Value> implements IHashMap<Key, Value> {
     private final int capacity;
     private int size;
-    private final RedBlackBST[] buckets;
+    private final RedBlackBST<Key, Value>[] buckets;
 
     public static void main(String[] args) {
-        MyHashMap map = new MyHashMap(5);
+        MyHashMap<Integer, String> map = new MyHashMap<>();
         map.put(1, "Hello");
         map.put(2, "World");
         map.put(3, "!");
@@ -15,7 +15,7 @@ public class MyHashMap implements IHashMap {
         map.put(6, "f");
         map.put(7, "f");
 
-        System.out.println(map.toString());
+        System.out.println(map);
         System.out.println(map.get(1));
         System.out.println(map.get(2));
         System.out.println(map.get(3));
@@ -26,7 +26,7 @@ public class MyHashMap implements IHashMap {
         map.remove(2);
         map.remove(3);
         map.remove(4);
-        System.out.println(map.toString());
+        System.out.println(map);
     }
 
     public MyHashMap() {
@@ -36,23 +36,23 @@ public class MyHashMap implements IHashMap {
         this.capacity = capacity;
         buckets = new RedBlackBST[capacity];
         for (int i = 0; i < capacity; i++){
-            buckets[i] = new RedBlackBST();
+            buckets[i] = new RedBlackBST<>();
         }
     }
 
     @Override
-    public int hash(int key){
-        return (key & 0x7fffffff) % capacity;
+    public int hash(Key key){
+        return (key.hashCode() & 0x7fffffff) % capacity;
     }
 
     @Override
-    public void put(int key, Object value) {
+    public void put(Key key, Value value) {
         this.buckets[hash(key)].put(key, value);
         this.size++;
     }
 
     @Override
-    public Object get(int key) {
+    public Value get(Key key) {
         if (this.isEmpty()){
             return null;
         }
@@ -60,7 +60,7 @@ public class MyHashMap implements IHashMap {
     }
 
     @Override
-    public void remove(int key) {
+    public void remove(Key key) {
         if (this.isEmpty()){
             return;
         }
@@ -69,7 +69,7 @@ public class MyHashMap implements IHashMap {
     }
 
     @Override
-    public boolean containsKey(int key) {
+    public boolean containsKey(Key key) {
         if (this.isEmpty()){
             return false;
         }

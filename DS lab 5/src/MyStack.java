@@ -2,23 +2,28 @@ import java.util.Scanner;
 
 public class MyStack implements IStack {
 
-    SingleLinkedList stack = new SingleLinkedList();
+    SingleLinkedList stack;
+
+    MyStack() {
+        stack = new SingleLinkedList();
+    }
 
     public static void main(String[] args) {
-        MyStack stack = new MyStack();
-        Scanner sc = new Scanner(System.in);
-        String input = sc.nextLine().trim();
-        if (!input.equals("[]")) {
-            String trimmed = input.substring(1, input.length() - 1);
-            String[] numStrings = trimmed.split(",");
-            for (int i = numStrings.length - 1; i >= 0; i--) {
-                int number = Integer.parseInt(numStrings[i].trim());
-                stack.push(number);
-            }
-        }
-        String command = sc.nextLine().trim();
 
-        try {
+        MyStack stack = new MyStack();
+
+        try (Scanner sc = new Scanner(System.in)) {
+            String input = sc.nextLine().trim();
+            if (!input.equals("[]")) {
+                String trimmed = input.substring(1, input.length() - 1);
+                String[] numStrings = trimmed.split(",");
+                for (int i = numStrings.length - 1; i >= 0; i--) {
+                    int number = Integer.parseInt(numStrings[i].trim());
+                    stack.push(number);
+                }
+            }
+            String command = sc.nextLine().trim();
+
             switch (command) {
                 case "push":
                     stack.push(Integer.parseInt(sc.nextLine().trim()));
@@ -35,37 +40,34 @@ public class MyStack implements IStack {
                     System.out.println(stack.size());
                     break;
                 case "isEmpty":
-                    System.out.println(stack.isEmpty()? "True":"False");
+                    System.out.println(stack.isEmpty() ? "True" : "False");
                     break;
                 default:
                     System.out.println("Error");
-                    sc.close();
                     return;
             }
         }
         catch (Exception e) {
             System.out.println("Error");
-            sc.close();
         }
-        sc.close();
     }
 
     @Override
     public Object pop() {
         if (stack.isEmpty()) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
-        Object temp = this.stack.head.getData();
-        this.stack.remove(0);
+        Object temp = this.stack.getHead().getData();
+        this.stack.removeFirst();
         return temp;
     }
 
     @Override
     public Object peek() {
         if (stack.isEmpty()) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
-        return this.stack.head.getData();
+        return this.stack.getHead().getData();
     }
 
     @Override
@@ -83,17 +85,10 @@ public class MyStack implements IStack {
         return this.stack.size();
     }
 
-    /** makes the stack empty
-     *
-     */
     public void clear(){
         this.stack.clear();
     }
 
-    /** help display the content of the stack
-     *
-     * @return string representation of the stack
-     */
     @Override
     public String toString() {
         return this.stack.toString();

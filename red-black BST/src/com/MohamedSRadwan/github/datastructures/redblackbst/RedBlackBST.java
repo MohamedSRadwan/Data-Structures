@@ -1,22 +1,21 @@
 package com.MohamedSRadwan.github.datastructures.redblackbst;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class RedBlackBST implements ITree {
+public class RedBlackBST<Key extends Comparable<Key>, Value> implements ITree<Key, Value> {
     private static final boolean RED = true;
     private static final boolean BLACK = false;
 
-    private static class Node {
-        int key;
-        Object value;
+    private class Node {
+        Key key;
+        Value value;
         Node left;
         Node right;
         boolean color;
         int N;
 
-        Node(int key, Object value, boolean color, int N) {
+        Node(Key key, Value value, boolean color, int N) {
             this.key = key;
             this.value = value;
             this.color = color;
@@ -84,23 +83,24 @@ public class RedBlackBST implements ITree {
     }
 
     @Override
-    public Object get(int key) {
+    public Value get(Key key) {
+        if (key == null) return null;
         return get(root, key);
     }
 
-    private Object get(Node x, int key) {
+    private Value get(Node x, Key key) {
         /* Return value associated with key in the subtree rooted at x;
          * return null if key not present in subtree rooted at x.
          */
 
         if (x == null) return null;
-        int cmp = key - (x.key);
+        int cmp = key.compareTo(x.key);
         if (cmp < 0) return get(x.left, key);
         else if (cmp > 0) return get(x.right, key);
         else return x.value;
     }
 
-    public int select(int k) {
+    public Key select(int k) {
         return select(root, k).key;
     }
 
@@ -112,19 +112,19 @@ public class RedBlackBST implements ITree {
         else return x;
     }
 
-    public int rank(int key) {
+    public int rank(Key key) {
         return rank(key, root);
     }
 
-    private int rank(int key, Node x) { // Return number of keys less than x.key in the subtree rooted at x.
+    private int rank(Key key, Node x) { // Return number of keys less than x.key in the subtree rooted at x.
         if (x == null) return 0;
-        int cmp = key - (x.key);
+        int cmp = key.compareTo(x.key);
         if (cmp < 0) return rank(key, x.left);
         else if (cmp > 0) return 1 + size(x.left) + rank(key, x.right);
         else return size(x.left);
     }
 
-    public int min() {
+    public Key min() {
         return min(root).key;
     }
 
@@ -133,7 +133,7 @@ public class RedBlackBST implements ITree {
         return min(x.left);
     }
 
-    public int max() {
+    public Key max() {
         return max(root).key;
     }
 
@@ -143,15 +143,15 @@ public class RedBlackBST implements ITree {
     }
 
     @Override
-    public int floor(int key) {
+    public Key floor(Key key) {
         Node x = floor(root, key);
-        if (x == null) return -1;
+        if (x == null) return null;
         return x.key;
     }
 
-    private Node floor(Node x, int key) {
+    private Node floor(Node x, Key key) {
         if (x == null) return null;
-        int cmp = key - (x.key);
+        int cmp = key.compareTo(x.key);
         if (cmp == 0) return x;
         if (cmp < 0) return floor(x.left, key);
         Node t = floor(x.right, key);
@@ -160,15 +160,15 @@ public class RedBlackBST implements ITree {
     }
 
     @Override
-    public int ceiling(int key) {
+    public Key ceiling(Key key) {
         Node x = ceiling(root, key);
-        if (x == null) return -1;
+        if (x == null) return null;
         return x.key;
     }
 
-    private Node ceiling(Node x, int key) {
+    private Node ceiling(Node x, Key key) {
         if (x == null) return null;
-        int cmp = key - (x.key);
+        int cmp = key.compareTo(x.key);
         if (cmp == 0) return x;
         if (cmp > 0) return ceiling(x.right, key);
         Node t = ceiling(x.left, key);
@@ -177,22 +177,21 @@ public class RedBlackBST implements ITree {
     }
 
     @Override
-    public void put(int key, Object val) {
-        if (val == null) {
-            delete(key);
+    public void put(Key key, Value value) {
+        if (value == null) {
             return;
         }
-        root = put(root, key, val);
+        root = put(root, key, value);
         root.color = BLACK;
     }
 
-    private Node put(Node h, int key, Object val) {
-        if (h == null) // Do standard insert, with red link to parent.
+    private Node put(Node h, Key key, Value val) {
+        if (h == null) // Do standard insert, with a red link to parent.
             return new Node(key, val, RED, 1);
-        int cmp = key - (h.key);
+        int cmp = key.compareTo(h.key);
         if (cmp < 0) h.left = put(h.left, key, val);
         else if (cmp > 0) h.right = put(h.right, key, val);
-        else h.value = val; // modify value of pre existing key
+        else h.value = val; // modify the value of pre-existing key
 
         // Fix up any right-leaning links.
         if (isRed(h.right) && !isRed(h.left)) h = rotateLeft(h);
@@ -270,7 +269,7 @@ public class RedBlackBST implements ITree {
     }
 
     @Override
-    public void delete(int key) {
+    public void delete(Key key) {
         if (isEmpty()) return;
         if (!isRed(root.left) && !isRed(root.right))
             root.color = RED;
@@ -278,20 +277,20 @@ public class RedBlackBST implements ITree {
         if (!isEmpty()) root.color = BLACK;
     }
 
-    private Node delete(Node h, int key) {
+    private Node delete(Node h, Key key) {
         if (h == null) return null;
-        if (key - (h.key) < 0) {
+        if (key.compareTo(h.key) < 0) {
             if (!isRed(h.left) && h.left != null && !isRed(h.left.left))
                 h = moveRedLeft(h);
             h.left = delete(h.left, key);
         } else {
             if (isRed(h.left))
                 h = rotateRight(h);
-            if (key - (h.key) == 0 && (h.right == null))
+            if (key.compareTo(h.key) == 0 && (h.right == null))
                 return null;
             if (!isRed(h.right) && h.right != null && !isRed(h.right.left))
                 h = moveRedRight(h);
-            if (key - (h.key) == 0) {
+            if (key.compareTo(h.key) == 0) {
                 h.value = get(h.right, min(h.right).key);
                 h.key = min(h.right).key;
                 h.right = deleteMin(h.right);
@@ -302,36 +301,36 @@ public class RedBlackBST implements ITree {
     }
 
     @Override
-    public boolean contains(Object value) {
-        if (value == null) return false;
+    public boolean contains(Key key) {
+        if (key == null) return false;
         if (root == null) return false;
         Node x = root;
-        return contains(value, x);
+        return contains(key, x);
     }
 
-    private boolean contains(Object value, Node x) {
+    private boolean contains(Key key, Node x) {
         if (x == null) return false;
-        int cmp = value.toString().compareTo(x.value.toString());
-        if (cmp < 0) return contains(value, x.left);
-        else if (cmp > 0) return contains(value, x.right);
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) return contains(key, x.left);
+        else if (cmp > 0) return contains(key, x.right);
         else return true;
     }
 
     @Override
-    public Iterable<Integer> keys() {
+    public Iterable<Key> keys() {
         return keys(min(), max());
     }
 
-    private Iterable<Integer> keys(int lo, int hi) {
-        Queue<Integer> queue = new LinkedList<>();
+    private Iterable<Key> keys(Key lo, Key hi) {
+        Queue<Key> queue = new LinkedList<>();
         keys(root, queue, lo, hi);
         return queue;
     }
 
-    private void keys(Node x, Queue<Integer> queue, int lo, int hi) {
+    private void keys(Node x, Queue<Key> queue, Key lo, Key hi) {
         if (x == null) return;
-        int cmplo = lo - (x.key);
-        int cmphi = hi - (x.key);
+        int cmplo = lo.compareTo(x.key);
+        int cmphi = hi.compareTo(x.key);
         if (cmplo < 0) keys(x.left, queue, lo, hi);
         if (cmplo <= 0 && cmphi >= 0) queue.add(x.key);
         if (cmphi > 0) keys(x.right, queue, lo, hi);
@@ -466,11 +465,7 @@ public class RedBlackBST implements ITree {
         if (x == null) return;
         toString(x.left, sb);
         sb.append("Key: ").append(x.key).append(", Value: ");
-        if (x.value.getClass().isArray()) {
-            sb.append(Arrays.toString((Object[]) x.value));
-        } else {
-            sb.append(x.value.toString());
-        }
+        sb.append(x.value.toString());
         sb.append("\n");
         toString(x.right, sb);
     }

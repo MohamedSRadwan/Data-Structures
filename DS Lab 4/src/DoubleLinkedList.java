@@ -1,13 +1,22 @@
 import java.util.Scanner;
 
 public class DoubleLinkedList implements ILinkedList{
-    DNode head;
-    int size;
+    private DNode head;
+    private DNode tail;
+    private int size;
 
     // Constructor
     public DoubleLinkedList(){
         this.head = null;
+        this.tail = null;
         this.size = 0;
+    }
+
+    public DNode getHead(){
+        return this.head;
+    }
+    public DNode getTail(){
+        return this.tail;
     }
 
     public int size() {
@@ -15,21 +24,23 @@ public class DoubleLinkedList implements ILinkedList{
     }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+
         DoubleLinkedList list = new DoubleLinkedList();
 
-        String input = sc.nextLine().trim();
-        if (!input.equals("[]")) {
-            String trimmed = input.substring(1, input.length() - 1).trim();
-            String[] numberStrings = trimmed.split(",");
-            for (String numStr : numberStrings) {
-                int number = Integer.parseInt(numStr.trim());
-                list.add(number);
-            }
-        }
+        try (Scanner sc = new Scanner(System.in)) {
 
-        String command = sc.next();
-        try {
+            String input = sc.nextLine().trim();
+            if (!input.equals("[]")) {
+                String trimmed = input.substring(1, input.length() - 1).trim();
+                String[] numberStrings = trimmed.split(",");
+                for (String numStr : numberStrings) {
+                    int number = Integer.parseInt(numStr.trim());
+                    list.add(number);
+                }
+            }
+
+            String command = sc.next();
+
             switch (command) {
                 case "add":
                     list.add(sc.nextInt());
@@ -39,12 +50,10 @@ public class DoubleLinkedList implements ILinkedList{
                     break;
                 case "size":
                     System.out.println(list.size());
-                    sc.close();
                     return;
                 case "get":
                     Object result = list.get(sc.nextInt());
                     if (result != null) System.out.println(result);
-                    sc.close();
                     return;
                 case "set":
                     list.set(sc.nextInt(), sc.nextInt());
@@ -54,14 +63,12 @@ public class DoubleLinkedList implements ILinkedList{
                     break;
                 case "isEmpty":
                     System.out.println(list.isEmpty() ? "True" : "False");
-                    sc.close();
                     return;
                 case "addToIndex":
                     list.add(sc.nextInt(), sc.nextInt());
                     break;
                 case "contains":
                     System.out.println(list.contains(sc.nextInt()) ? "True" : "False");
-                    sc.close();
                     return;
                 case "clear":
                     list.clear();
@@ -70,16 +77,16 @@ public class DoubleLinkedList implements ILinkedList{
         }
         catch (Exception e) {
             System.out.println("Error");
-            sc.close();
+
             return;
         }
         System.out.println(list);
-        sc.close();
+
     }
 
-    private DNode nodeFromIndex(int index) throws NodeDoesnotExist{
+    private DNode nodeFromIndex(int index) throws RuntimeException{
         if (index < 0 || index >= size || head == null) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
         DNode curr = head;
         for (int i = 0; i < index && curr != null; i++) {
@@ -91,6 +98,9 @@ public class DoubleLinkedList implements ILinkedList{
         node.setNext(head);
         node.setPrev(null);
         head = node;
+        if (tail == null) {
+            tail = node;
+        }
         size++;
     }
     private void addLast(DNode node) {
@@ -99,11 +109,9 @@ public class DoubleLinkedList implements ILinkedList{
             addFirst(node);
             return;
         }
-        while (curr.getNext() != null) {
-            curr = curr.getNext();
-        }
-        curr.setNext(node);
-        node.setPrev(curr);
+        node.setPrev(tail);
+        tail.setNext(node);
+        tail = node;
         size++;
     }
     public void set(int index, Object element) {
@@ -113,14 +121,14 @@ public class DoubleLinkedList implements ILinkedList{
         try {
             return nodeFromIndex(index).getData();
         }
-        catch (NodeDoesnotExist e) {
+        catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
     public ILinkedList sublist(int fromIndex, int toIndex) {
         if (fromIndex < 0 || fromIndex >= size || toIndex < 0 || toIndex >= size || fromIndex > toIndex) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
         head = nodeFromIndex(fromIndex);
 
@@ -129,7 +137,7 @@ public class DoubleLinkedList implements ILinkedList{
             curr = curr.getNext();
         }
         if (curr == null) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
         curr.setNext(null);
         return this;
@@ -150,6 +158,9 @@ public class DoubleLinkedList implements ILinkedList{
             addFirst(newNode);
             return;
         }
+        if (index == size - 1) {
+            addLast(newNode);
+        }
 
         DNode prev = nodeFromIndex(index - 1);
         newNode.setNext(prev.getNext());
@@ -167,24 +178,47 @@ public class DoubleLinkedList implements ILinkedList{
 
     public void clear() {
         head = null;
+        tail = null;
         size = 0;
+    }
+
+    public void removeFirst(){
+        if (isEmpty()) {
+            throw new RuntimeException("Error");
+        }
+        head = head.getNext();
+        size--;
+        if (head == null) {
+            tail = null;
+        }
+    }
+    public void removeLast(){
+        if (isEmpty()) {
+            throw new RuntimeException("Error");
+        }
+        if (size == 1) {
+            clear();
+        }
+        DNode beforeLast = tail.getPrev();
+        tail.setPrev(null);
+        beforeLast.setNext(null);
+        tail = beforeLast;
+        size--;
     }
 
     public void remove(int index) {
         
         if (index == 0 && head != null){ // Remove head
-            DNode temp = head;
-            if (head.getNext() != null) {
-                head.getNext().setPrev(null);
-            }
-            head = head.getNext();
-            temp.setNext(null);
-            size--;
+            removeFirst();
+            return;
+        }
+        if (index == size - 1) {
+            removeLast();
             return;
         }
         DNode prev = nodeFromIndex(index - 1);
         if (prev.getNext() == null) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
         prev.setNext(prev.getNext().getNext()); // Works for middle/last nodes
         if (prev.getNext() != null){

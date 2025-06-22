@@ -46,7 +46,7 @@ public class LinkedListQueue implements IQueue, ILinkedBased {
         queue = new SingleLinkedList();
     }
     public Object front(){
-        return this.queue.head.getData();
+        return this.queue.getHead().getData();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class LinkedListQueue implements IQueue, ILinkedBased {
             throw new RuntimeException("Queue is empty");
         }
         Object item = this.queue.get(0);
-        this.queue.remove(0);
+        this.queue.removeFirst();
         return item;
     }
 

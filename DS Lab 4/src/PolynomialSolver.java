@@ -128,7 +128,7 @@ public class PolynomialSolver implements IPolynomialSolver {
     private int[][] getTerms(char poly) {
         switch (poly){
             case 'A': {
-                if (A.isEmpty()) throw new NodeDoesnotExist("Error");
+                if (A.isEmpty()) throw new RuntimeException("Error");
                 int[][] terms = new int[A.size()][2];
                 for (int i = 0; i < A.size(); i++) {
                     terms[i] = (int[]) A.get(i); // Casting object to int[]
@@ -136,7 +136,7 @@ public class PolynomialSolver implements IPolynomialSolver {
                 return terms;
             }
             case 'B': {
-                if (B.isEmpty()) throw new NodeDoesnotExist("Error");
+                if (B.isEmpty()) throw new RuntimeException("Error");
                 int[][] terms = new int[B.size()][2];
                 for (int i = 0; i < B.size(); i++) {
                     terms[i] = (int[]) B.get(i); // Casting object to int[]
@@ -144,7 +144,7 @@ public class PolynomialSolver implements IPolynomialSolver {
                 return terms;
             }
             case 'C': {
-                if (C.isEmpty()) throw new NodeDoesnotExist("Error");
+                if (C.isEmpty()) throw new RuntimeException("Error");
                 int[][] terms = new int[C.size()][2];
                 for (int i = 0; i < C.size(); i++) {
                     terms[i] = (int[]) C.get(i); // Casting object to int[]
@@ -152,7 +152,7 @@ public class PolynomialSolver implements IPolynomialSolver {
                 return terms;
             }
             case 'R': {
-                if (R.isEmpty()) throw new NodeDoesnotExist("Error");
+                if (R.isEmpty()) throw new RuntimeException("Error");
                 int[][] terms = new int[R.size()][2];
                 for (int i = 0; i < R.size(); i++) {
                     terms[i] = (int[]) R.get(i);
@@ -171,7 +171,7 @@ public class PolynomialSolver implements IPolynomialSolver {
         StringBuilder sb = new StringBuilder();
         int[][] terms = getTerms(poly);
         if (terms == null) {
-            //throw new NodeDoesnotExist("Error");
+            //throw new RuntimeException()("Error");
             return "[]";
         }
         int nonZeroCount = 0;
@@ -230,7 +230,7 @@ public class PolynomialSolver implements IPolynomialSolver {
         int[][] terms1 = getTerms(poly1);
         int[][] terms2 = getTerms(poly2);
         if (terms1 == null || terms2 == null) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
         int numOfTerms = Math.max(terms1.length,terms2.length);
         int[][] result = new int[numOfTerms][2];
@@ -253,7 +253,7 @@ public class PolynomialSolver implements IPolynomialSolver {
         int[][] terms1 = getTerms(poly1);
         int[][] terms2 = getTerms(poly2);
         if (terms1 == null || terms2 == null) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
         int numOfTerms = Math.max(terms1.length,terms2.length);
         int[][] result = new int[numOfTerms][2];
@@ -290,24 +290,22 @@ public class PolynomialSolver implements IPolynomialSolver {
     private void sortedAddNumbers(SingleLinkedList list, Object element) {
         SNode newNode = new SNode(element);
         int newVal = ((int[]) newNode.getData())[1];
-        // SNode head = list.head;
+
         // Case 1: Insert at head if list is empty or new element is larger than head
-        if (list.head == null || ((int[]) list.head.getData())[1] < newVal) {
-            newNode.setNext(list.head);
-            list.head = newNode;
-            list.size++;
+        if (list.getHead() == null || ((int[]) list.getHead().getData())[1] < newVal) {
+            list.add(0, newNode);
             return;
         }
     
         // Case 2: Insert in the correct sorted position
-        SNode curr = list.head;
+        SNode curr = list.getHead();
         while (curr.getNext() != null && ((int[]) curr.getNext().getData())[1] >= newVal) {
             curr = curr.getNext();
         }
     
         newNode.setNext(curr.getNext());
         curr.setNext(newNode);
-        list.size++;
+        list.incrementSize();
     }
 
 
@@ -318,10 +316,10 @@ public class PolynomialSolver implements IPolynomialSolver {
         SingleLinkedList firstList = getPolynomial(poly1);
         SingleLinkedList secondList = getPolynomial(poly2);
         if (firstList == null || secondList == null) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
-        SNode ptr1 = firstList.head;
-        SNode ptr2 = secondList.head;
+        SNode ptr1 = firstList.getHead();
+        SNode ptr2 = secondList.getHead();
         while(ptr1 != null){
             while(ptr2 != null){
                 int coeff = ((int[]) ptr1.getData())[0] * ((int[]) ptr2.getData())[0];
@@ -330,12 +328,12 @@ public class PolynomialSolver implements IPolynomialSolver {
                 sortedAddNumbers(R,x);
                 ptr2 = ptr2.getNext();
             }
-            ptr2 = secondList.head;
+            ptr2 = secondList.getHead();
             ptr1 = ptr1.getNext();
         }
 
         // Now we want to add like terms
-        SNode ptr3 = R.head;
+        SNode ptr3 = R.getHead();
         int finalNumberOfTerms = ((int[]) ptr3.getData())[1];
         int[][] finalResult = new int[finalNumberOfTerms+1][2];
         int sumLikeTerms = 0;

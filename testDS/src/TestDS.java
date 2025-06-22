@@ -6,21 +6,21 @@ import java.util.List;
 
 public class TestDS {
     SingleLinkedList list;
-    RedBlackBST tree;
-    MyHashMap map;
+    com.MohamedSRadwan.github.datastructures.redblackbst.RedBlackBST<Integer, String> tree;
+    MyHashMap<Integer, String> map;
 
     public static void main(String[] args) {
         TestDS t = new TestDS();
 
         try {
             //  Read all commands into memory first
-            List<String> commands = t.readCommands("testDS//testdataLL.txt");
+            List<String> commands = t.readCommands("testdataLL.txt");
 
             // Test linked list
             long timeLL = t.testLL(commands);
             System.out.println("Linked List: " + timeLL + " ms");
 
-            commands = t.readCommands("testDS//testdatakv.txt");
+            commands = t.readCommands("testdatakv.txt");
 
             // Test tree
             long timeBST = t.testBST(commands);
@@ -47,10 +47,9 @@ public class TestDS {
     }
 
     public long testLL(List<String> commands) {
-        // Clear the list before each test run
         list = new SingleLinkedList();
 
-        long start = System.nanoTime(); // More precise timing with nanoTime()
+        long start = System.nanoTime();
 
         for (String line : commands) {
             String[] split = line.split(" ");
@@ -66,14 +65,14 @@ public class TestDS {
     }
 
     public long testBST(List<String> commands) {
-        tree = new RedBlackBST();
+        tree = new com.MohamedSRadwan.github.datastructures.redblackbst.RedBlackBST<>();
         long start = System.nanoTime();
         for (String line : commands) {
             String[] split = line.split(" ");
             switch (split[0]) {
                 case "put" -> tree.put(Integer.parseInt(split[1]), split[2]);
                 case "get" -> tree.get(Integer.parseInt(split[1]));
-                case "contains" -> tree.contains(split[1]);
+                case "contains" -> tree.contains(Integer.parseInt(split[1]));
                 case "delete" -> tree.delete(Integer.parseInt(split[1]));
             }
         }
@@ -81,7 +80,7 @@ public class TestDS {
     }
 
     public long testMap(List<String> commands) {
-        map = new MyHashMap();
+        map = new MyHashMap<>();
         long start = System.nanoTime();
         for(String line : commands){
             String[] split = line.split(" ");

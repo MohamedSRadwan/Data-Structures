@@ -8,7 +8,7 @@ public class UnitTest {
     @Test
     public void treeTest() {
 
-        RedBlackBST tree = new RedBlackBST();
+        RedBlackBST<Integer, String> tree = new RedBlackBST<> ();
         tree.put(1, "A");tree.put(2, "B");tree.put(3, "C");tree.put(4, "D");
         tree.put(5, "E");tree.put(6, "F");tree.put(7, "G");tree.put(8, "H");
         tree.put(9, "I");
@@ -27,7 +27,7 @@ public class UnitTest {
 
         tree.delete(1);
         assertNull(tree.get(1));
-        assertFalse(tree.contains("A"));
+        assertFalse(tree.contains(1));
 
         assertEquals(8, tree.size());
         assertFalse(tree.isEmpty());
@@ -42,7 +42,7 @@ public class UnitTest {
         tree.deleteMin();
         assertNull(tree.get(2));
 
-        assertTrue(tree.contains("D"));
+        assertTrue(tree.contains(4));
 
         tree.delete(4);
         assertNull(tree.get(4));
@@ -72,7 +72,7 @@ public class UnitTest {
 
     @Test
     public void testHeight() {
-        RedBlackBST tree = new RedBlackBST();
+        RedBlackBST<Integer, String> tree = new RedBlackBST<>();
         tree.put((int) 'S',  "S");
         tree.put((int) 'E',  "E");
         tree.put((int) 'A',  "A");
@@ -89,7 +89,7 @@ public class UnitTest {
 
     @Test
     public void testFloorCeiling() {
-        RedBlackBST tree = new RedBlackBST();
+        RedBlackBST<Integer, String> tree = new RedBlackBST<>();
         tree.put((int) 'S',  "S");
         tree.put((int) 'E',  "E");
         tree.put((int) 'A',  "A");
@@ -107,7 +107,5 @@ public class UnitTest {
         assertEquals("X", tree.get(tree.floor((int) 'Y')));
         tree.printTree();
     }
-
-
 
 }

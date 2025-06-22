@@ -3,12 +3,24 @@ import java.util.Scanner;
 
 public class SingleLinkedList implements ILinkedList {
 
-    SNode head;
-    int size;
+    private SNode head;
+    private SNode tail;
+    private int size;
 
     public SingleLinkedList() {
         this.head = null;
+        this.tail = null;
         this.size = 0;
+    }
+
+    public SNode getHead(){
+        return this.head;
+    }
+    public SNode getTail(){
+        return this.tail;
+    }
+    public void incrementSize(){
+        this.size++;
     }
 
     public static void main(String[] args) {
@@ -69,9 +81,9 @@ public class SingleLinkedList implements ILinkedList {
         sc.close();
     }
 
-    private SNode nodeFromIndex(int index) throws NodeDoesnotExist{
+    private SNode nodeFromIndex(int index) throws RuntimeException{
         if (index < 0 || index >= size || head == null) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
         SNode curr = head;
         for (int i = 0; i < index && curr != null; i++) {
@@ -83,18 +95,18 @@ public class SingleLinkedList implements ILinkedList {
     private void addFirst(SNode node) {
         node.setNext(head);
         head = node;
+        if (tail == null) {
+            tail = head;
+        }
         size++;
     }
     private void addLast(SNode node) {
-        SNode curr = head;
-        if (curr == null) {
+        if (isEmpty()){
             addFirst(node);
             return;
         }
-        while (curr.getNext() != null) {
-            curr = curr.getNext();
-        }
-        curr.setNext(node);
+        tail.setNext(node);
+        tail = node;
         size++;
     }
 
@@ -106,7 +118,7 @@ public class SingleLinkedList implements ILinkedList {
         try {
             return nodeFromIndex(index).getData();
         }
-        catch (NodeDoesnotExist e) {
+        catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }
         return null;
@@ -114,7 +126,7 @@ public class SingleLinkedList implements ILinkedList {
 
     public ILinkedList sublist(int fromIndex, int toIndex) {
         if (fromIndex < 0 || fromIndex >= size || toIndex < 0 || toIndex >= size || fromIndex > toIndex) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
         head = nodeFromIndex(fromIndex);
 
@@ -123,7 +135,7 @@ public class SingleLinkedList implements ILinkedList {
             curr = curr.getNext();
         }
         if (curr == null) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
         curr.setNext(null);
         return this;
@@ -150,6 +162,10 @@ public class SingleLinkedList implements ILinkedList {
             addFirst(newNode);
             return;
         }
+        if (index == size - 1) {
+            addLast(newNode);
+            return;
+        }
 
         SNode prev = nodeFromIndex(index - 1);
         newNode.setNext(prev.getNext());
@@ -167,22 +183,35 @@ public class SingleLinkedList implements ILinkedList {
 
     public void clear() {
         head = null;
+        tail = null;
         size = 0;
+    }
+
+    public void removeFirst() {
+        if (isEmpty()) throw new RuntimeException("Error");
+        head = head.getNext();
+        if (head == null){
+            tail = null;
+        }
+        size--;
     }
 
     public void remove(int index) {
         if (index == 0 && head != null){ // Remove head
-            SNode temp = head;
-            head = head.getNext();
-            temp.setNext(null);
-            size--;
+            removeFirst();
             return;
         }
         SNode prev = nodeFromIndex(index - 1);
         if (prev.getNext() == null) {
-            throw new NodeDoesnotExist("Error");
+            throw new RuntimeException("Error");
         }
-        prev.setNext(prev.getNext().getNext()); // Works for middle/last nodes
+        if (prev.getNext() == this.tail){ // delete last element
+            prev.setNext(null);
+            tail = prev;
+            size--;
+            return;
+        }
+        prev.setNext(prev.getNext().getNext()); // delete middle node
         size--;
     }
 
